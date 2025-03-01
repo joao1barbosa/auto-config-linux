@@ -6,6 +6,10 @@
 # ----------------------------- VARIÁVEIS ----------------------------- #
 set -e
 
+##URLS
+
+URL_DISCORD="https://discord.com/api/download?platform=linux&format=deb"
+
 
 DIRETORIO_DOWNLOADS="$HOME/Downloads/programas"
 FILE="/home/$USER/.config/gtk-3.0/bookmarks"
@@ -70,10 +74,7 @@ install_debs(){
 echo -e "${BLUE}[INFO] - Baixando pacotes .deb${NON_COLOR}"
 
 mkdir "$DIRETORIO_DOWNLOADS"
-wget -c "$URL_GOOGLE_CHROME"       -P "$DIRETORIO_DOWNLOADS"
-wget -c "$URL_4K_VIDEO_DOWNLOADER" -P "$DIRETORIO_DOWNLOADS"
-wget -c "$URL_INSYNC"              -P "$DIRETORIO_DOWNLOADS"
-wget -c "$URL_SYNOLOGY_DRIVE"      -P "$DIRETORIO_DOWNLOADS"
+wget -c "URL_DISCORD"       -P "$DIRETORIO_DOWNLOADS"
 
 ## Instalando pacotes .deb baixados na sessão anterior ##
 echo -e "${BLUE}[INFO] - Instalando pacotes .deb baixados${NON_COLOR}"
