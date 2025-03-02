@@ -155,10 +155,15 @@ install_nvm(){
     [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
 
   nvm install node
+  nvm alias default node
+  nvm use node
+
 }
 
 ## Install Supabase ##
 install_supabase(){
+  echo -e "${BLUE}[INFO] - Instalando Supabase CLI${NON_COLOR}"
+
   sudo curl -L -o /usr/local/bin/supabase https://github.com/supabase/cli/releases/latest/download/supabase-linux-amd64
 
   sudo chmod +x /usr/local/bin/supabase
@@ -255,5 +260,4 @@ config_fonts
 system_clean
 
 ## finalização
-
   echo -e "${BLUE}[INFO] - Script finalizado, instalação concluída! :)${NON_COLOR}"
