@@ -4,7 +4,7 @@
 # Based on:       https://raw.githubusercontent.com/Diolinux/pop-os-postinstall/refs/heads/main/pop-os-postinstall.sh
 #
 # ----------------------------- VARIÁVEIS ----------------------------- #
-set -e
+set -e  
 
 ##URLS
 
