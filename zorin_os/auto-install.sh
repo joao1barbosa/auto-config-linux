@@ -9,8 +9,9 @@ set -e
 ##URLS
 
 URL_DISCORD="https://discord.com/api/download?platform=linux&format=deb"
-URL_VSCODE="https://vscode.download.prss.microsoft.com/dbazure/download/stable/e54c774e0add60467559eb0d1e229c6452cf8447/code_1.97.2-1739406807_amd64.deb"
-URL_WARP="https://app.warp.dev/get_warp\?package\=deb"
+URL_VSCODE="https://code.visualstudio.com/sha/download?build=stable&os=linux-deb-x64"
+# Não encontrei um lick que baixa automaticamente a versão mais recente
+URL_WARP="https://releases.warp.dev/stable/v0.2025.02.26.08.02.stable_02/warp-terminal_0.2025.02.26.08.02.stable.02_amd64.deb"
 
 
 DIRETORIO_DOWNLOADS="$HOME/Downloads/programas"
@@ -51,6 +52,11 @@ travas_apt(){
   sudo rm -f /var/cache/apt/archives/lock
 }
 
+## Adiciona repositórios necessários ##
+add_repositories(){
+  sudo add-apt-repository ppa:ondrej/php -y
+}
+
 ## Atualizando o repositório ##
 just_apt_update(){
 sudo apt update -y
@@ -63,6 +69,10 @@ PROGRAMAS_PARA_INSTALAR=(
   folder-color
   git
   wget
+  php
+  python3
+  python3-pip
+  zsh
 )
 
 # ---------------------------------------------------------------------- #
@@ -78,7 +88,7 @@ cd "$DIRETORIO_DOWNLOADS"
 
 wget --content-disposition -c "$URL_DISCORD"
 wget --content-disposition -c "$URL_VSCODE"
-wget -c "$URL_WARP" -O warp-terminal-latest.deb
+wget --content-disposition -c "$URL_WARP"
 
 cd "$HOME"
 
@@ -134,10 +144,35 @@ sudo apt-get update
 # Instalando definitivamente docker e extensões
 sudo apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
 
+sudo usermod -aG docker $USER
+
 }
 
-## Finalização, atualização e limpeza##
+## Configurar ZSH com extensões ##
+config_zsh(){
+  cp ../.zshrc "$HOME"
+  cp ../.p10k.zsh "$HOME"
 
+  sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
+
+  # Clona repositório do tema powerlevel10k
+  git clone https://github.com/romkatv/powerlevel10k.git $ZSH_CUSTOM/themes/powerlevel10k
+
+  # Adiciona extensões ao ZSH
+  git clone https://github.com/zsh-users/zsh-syntax-highlighting.git
+  git clone https://github.com/zsh-users/zsh-autosuggestions
+
+  # Define o Zsh como shell padrão
+  if [ "$SHELL" != "$(which zsh)" ]; then
+    chsh -s "$(which zsh)"
+    echo "Zsh definido como shell padrão."
+  else
+    echo "Zsh já é o shell padrão."
+  fi
+}
+
+
+## Finalização, atualização e limpeza##
 system_clean(){
 
 apt_update -y
@@ -168,6 +203,14 @@ echo "file:///home/$USER/Temp 🕖 Temp" >> $FILE
 echo "file:///home/$USER/Projects 🔧 Projects" >> $FILE
 }
 
+## Configura fontes do sistema ##
+config_fonts(){
+  sudo cp ../_fonts/* /usr/share/fonts
+
+  fc-cache -f -v
+
+}
+
 # -------------------------------EXECUÇÃO----------------------------------------- #
 
 travas_apt
@@ -178,9 +221,11 @@ travas_apt
 just_apt_update
 install_debs
 install_flatpaks
-extra_config
 install_docker
+extra_config
 apt_update
+config_zsh
+config_fonts
 system_clean
 
 ## finalização

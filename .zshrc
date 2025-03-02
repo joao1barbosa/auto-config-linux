@@ -116,7 +116,6 @@ alias py="python3"
 alias pjt="cd ./Projects"
 alias activate="source env/bin/activate"
 alias sail="./vendor/bin/sail"
-alias laravel="docker compose exec backend"
 # android studio emulator config
 export ANDROID_HOME=${HOME}/Android/Sdk
 export PATH=${ANDROID_HOME}/tools:${PATH}
