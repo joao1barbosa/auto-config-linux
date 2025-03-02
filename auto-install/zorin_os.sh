@@ -172,8 +172,8 @@ install_supabase(){
 #TODO: fix this config
 ## Configurar ZSH com extensões ##
 config_zsh(){
-  cp ../.zshrc "$HOME"
-  cp ../.p10k.zsh "$HOME"
+  cp ../_zsh-files/.zshrc "$HOME"
+  cp ../_zsh-files/.p10k.zsh "$HOME"
 
   sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
 
