@@ -169,20 +169,22 @@ install_supabase(){
   sudo chmod +x /usr/local/bin/supabase
 }
 
-#TODO: fix this config
 ## Configurar ZSH com extensões ##
 config_zsh(){
-  cp ../_zsh-files/.zshrc "$HOME"
-  cp ../_zsh-files/.p10k.zsh "$HOME"
+  echo -e "${BLUE}[INFO] - Configurando o ZSH${NON_COLOR}"
 
-  sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
+  cp ../_zsh-files/* "$HOME"
+
+  sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --unattended
+
+  ZSH_CUSTOM="${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}"
 
   # Clona repositório do tema powerlevel10k
-  git clone https://github.com/romkatv/powerlevel10k.git $ZSH_CUSTOM/themes/powerlevel10k
+  git clone https://github.com/romkatv/powerlevel10k.git "$ZSH_CUSTOM/themes/powerlevel10k"
 
   # Adiciona extensões ao ZSH
-  git clone https://github.com/zsh-users/zsh-syntax-highlighting.git
-  git clone https://github.com/zsh-users/zsh-autosuggestions
+  git clone https://github.com/zsh-users/zsh-syntax-highlighting.git "$ZSH_CUSTOM/plugins/zsh-syntax-highlighting"
+  git clone https://github.com/zsh-users/zsh-autosuggestions "$ZSH_CUSTOM/plugins/zsh-autosuggestions"
 
   # Define o Zsh como shell padrão
   if [ "$SHELL" != "$(which zsh)" ]; then
@@ -258,6 +260,4 @@ apt_update
 config_git
 config_fonts
 system_clean
-
-## finalização
-  echo -e "${BLUE}[INFO] - Script finalizado, instalação concluída! :)${NON_COLOR}"
+config_zsh
