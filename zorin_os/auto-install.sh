@@ -200,7 +200,6 @@ mkdir -p /home/$USER/Projects
 mkdir -p /home/$USER/Vídeos/'OBS Rec'
 
 #Adiciona atalhos ao Nautilus
-
 if test -f "$FILE"; then
     echo "$FILE já existe"
 else
@@ -234,8 +233,8 @@ install_docker
 install_nvm
 extra_config
 apt_update
-config_zsh
 config_fonts
+config_zsh
 system_clean
 
 ## finalização
