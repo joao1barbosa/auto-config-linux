@@ -127,8 +127,3 @@ export PATH=${ANDROID_HOME}/platform-tools:${PATH}
 
 source ~/.nvm/nvm.sh -U compinit; compinit
 [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
-
-
-eval "$(home/linuxbrew/.linuxbrew/bin/brew shellenv)"
-
-eval "$( /home/linuxbrew/.linuxbrew/bin/brew shellenv)"

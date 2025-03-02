@@ -161,6 +161,7 @@ install_nvm(){
 }
 
 ## Install Supabase ##
+#TODO: fix supabase install
 install_supabase(){
   echo -e "${BLUE}[INFO] - Instalando Supabase CLI${NON_COLOR}"
 
@@ -173,8 +174,6 @@ install_supabase(){
 config_zsh(){
   echo -e "${BLUE}[INFO] - Configurando o ZSH${NON_COLOR}"
 
-  cp ../_zsh-files/* "$HOME"
-
   sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --unattended
 
   ZSH_CUSTOM="${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}"
@@ -185,6 +184,9 @@ config_zsh(){
   # Adiciona extensões ao ZSH
   git clone https://github.com/zsh-users/zsh-syntax-highlighting.git "$ZSH_CUSTOM/plugins/zsh-syntax-highlighting"
   git clone https://github.com/zsh-users/zsh-autosuggestions "$ZSH_CUSTOM/plugins/zsh-autosuggestions"
+
+  cp -f ../_zsh-files/.zshrc "$HOME"
+  cp -f ../_zsh-files/.p10k.zsh "$HOME"
 
   # Define o Zsh como shell padrão
   if [ "$SHELL" != "$(which zsh)" ]; then
