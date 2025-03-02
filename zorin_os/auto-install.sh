@@ -148,6 +148,15 @@ sudo usermod -aG docker $USER
 
 }
 
+## Instalar NVM e configurar o Node.js ##
+install_nvm(){
+  wget -qO- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.1/install.sh | bash
+
+  source ~/.bashrc
+
+  nvm install node
+}
+
 ## Configurar ZSH com extensões ##
 config_zsh(){
   cp ../.zshrc "$HOME"
@@ -222,6 +231,7 @@ just_apt_update
 install_debs
 install_flatpaks
 install_docker
+install_nvm
 extra_config
 apt_update
 config_zsh
