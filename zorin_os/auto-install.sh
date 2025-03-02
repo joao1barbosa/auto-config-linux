@@ -156,6 +156,13 @@ install_nvm(){
   nvm install node
 }
 
+## Install Supabase ##
+install_supabase(){
+  sudo curl -L -o /usr/local/bin/supabase https://github.com/supabase/cli/releases/latest/download/supabase-linux-amd64
+
+  sudo chmod +x /usr/local/bin/supabase
+}
+
 #TODO: fix this config
 ## Configurar ZSH com extensões ##
 config_zsh(){
@@ -239,6 +246,7 @@ install_debs
 install_flatpaks
 install_docker
 install_nvm
+install_supabase
 extra_config
 apt_update
 config_git
