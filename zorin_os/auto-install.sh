@@ -83,6 +83,9 @@ sudo dpkg -i $DIRETORIO_DOWNLOADS/*.deb
 # Instalar programas no apt
 echo -e "${BLUE}[INFO] - Instalando pacotes apt do repositório${NON_COLOR}"
 
+# Aceita automaticamente a licença das fontes da Microsoft
+echo "ttf-mscorefonts-installer msttcorefonts/accepted-mscorefonts-eula select true" | sudo debconf-set-selections
+
 for nome_do_programa in ${PROGRAMAS_PARA_INSTALAR[@]}; do
   if ! dpkg -l | grep -q $nome_do_programa; then # Só instala se já não estiver instalado
     sudo apt install "$nome_do_programa" -y
