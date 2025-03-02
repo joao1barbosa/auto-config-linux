@@ -74,7 +74,7 @@ install_debs(){
 echo -e "${BLUE}[INFO] - Baixando pacotes .deb${NON_COLOR}"
 
 mkdir -p "$DIRETORIO_DOWNLOADS"
-wget -c "URL_DISCORD"       -P "$DIRETORIO_DOWNLOADS"
+wget --content-disposition -c "$URL_DISCORD"       -P "$DIRETORIO_DOWNLOADS"
 
 ## Instalando pacotes .deb baixados na sessão anterior ##
 echo -e "${BLUE}[INFO] - Instalando pacotes .deb baixados${NON_COLOR}"
