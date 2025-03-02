@@ -73,7 +73,7 @@ install_debs(){
 
 echo -e "${BLUE}[INFO] - Baixando pacotes .deb${NON_COLOR}"
 
-mkdir "$DIRETORIO_DOWNLOADS"
+mkdir -p "$DIRETORIO_DOWNLOADS"
 wget -c "URL_DISCORD"       -P "$DIRETORIO_DOWNLOADS"
 
 ## Instalando pacotes .deb baixados na sessão anterior ##
@@ -119,9 +119,9 @@ nautilus -q
 #Cria pastas no nautilus
 extra_config(){
 
-mkdir /home/$USER/Temp
-mkdir /home/$USER/Projects
-mkdir /home/$USER/Vídeos/'OBS Rec'
+mkdir -p /home/$USER/Temp
+mkdir -p /home/$USER/Projects
+mkdir -p /home/$USER/Vídeos/'OBS Rec'
 
 #Adiciona atalhos ao Nautilus
 
