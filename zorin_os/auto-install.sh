@@ -7,19 +7,16 @@
 set -e  
 
 ##URLS
-
 URL_DISCORD="https://discord.com/api/download?platform=linux&format=deb"
 URL_VSCODE="https://code.visualstudio.com/sha/download?build=stable&os=linux-deb-x64"
 # Não encontrei um lick que baixa automaticamente a versão mais recente
 URL_WARP="https://releases.warp.dev/stable/v0.2025.02.26.08.02.stable_02/warp-terminal_0.2025.02.26.08.02.stable.02_amd64.deb"
-
 
 DIRETORIO_DOWNLOADS="$HOME/Downloads/programas"
 FILE="/home/$USER/.config/gtk-3.0/bookmarks"
 
 
 #COLORS
-
 ORANGE='\e[1;93m'
 BLUE='\e[1;94m'
 NON_COLOR='\e[0m'
@@ -28,7 +25,6 @@ NON_COLOR='\e[0m'
 #FUNCTIONS
 
 # Atualizando repositório e fazendo atualização do sistema
-
 apt_update(){
   sudo apt update && sudo apt dist-upgrade -y
 }
@@ -63,7 +59,6 @@ sudo apt update -y
 }
 
 ##DEB SOFTWARES TO INSTALL
-
 PROGRAMAS_PARA_INSTALAR=(
   vlc
   folder-color
@@ -78,7 +73,6 @@ PROGRAMAS_PARA_INSTALAR=(
 # ---------------------------------------------------------------------- #
 
 ## Download e instalaçao de programas externos ##
-
 install_debs(){
 
 echo -e "${BLUE}[INFO] - Baixando pacotes .deb${NON_COLOR}"
@@ -124,6 +118,8 @@ flatpak install flathub io.dbeaver.DBeaverCommunity -y
 ##Instalando Docker ##
 install_docker(){
 
+  echo -e "${BLUE}[INFO] - Instalando Docker ${NON_COLOR}"
+
 # Remove pacotes conflitantes
 for pkg in docker.io docker-doc docker-compose docker-compose-v2 podman-docker containerd runc; do sudo apt-get remove $pkg; done
 
@@ -150,6 +146,9 @@ sudo usermod -aG docker $USER
 
 ## Instalar NVM e configurar o Node.js ##
 install_nvm(){
+
+  echo -e "${BLUE}[INFO] - Instalando NVM e Node.js (lts)${NON_COLOR}"
+
   wget -qO- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.1/install.sh | bash
 
   source ~/.bashrc
@@ -157,6 +156,7 @@ install_nvm(){
   nvm install node
 }
 
+#TODO: fix this config
 ## Configurar ZSH com extensões ##
 config_zsh(){
   cp ../.zshrc "$HOME"
@@ -207,13 +207,21 @@ else
     touch /home/$USER/.config/gkt-3.0/bookmarks
 fi
 
-echo "file:///home/$USER/Temp 🕖 Temp" >> $FILE
-echo "file:///home/$USER/Projects 🔧 Projects" >> $FILE
+echo "file:///home/$USER/Temp Temp" >> $FILE
+echo "file:///home/$USER/Projects Projects" >> $FILE
+}
+
+## Config git ##
+config_git(){
+git config --global user.name joao1barbosa
+git config --global user.email joao1.barbosa@outlook.com
+git config --global core.editor code
+
 }
 
 ## Configura fontes do sistema ##
 config_fonts(){
-  sudo cp ../_fonts/* /usr/share/fonts
+  sudo cp -r ../_fonts/* /usr/share/fonts
 
   fc-cache -f -v
 
@@ -233,8 +241,8 @@ install_docker
 install_nvm
 extra_config
 apt_update
+config_git
 config_fonts
-config_zsh
 system_clean
 
 ## finalização
