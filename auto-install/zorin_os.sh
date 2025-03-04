@@ -112,6 +112,7 @@ flatpak install flathub org.gimp.GIMP -y
 flatpak install flathub com.spotify.Client -y
 flatpak install flathub org.telegram.desktop -y
 flatpak install flathub io.dbeaver.DBeaverCommunity -y
+flatpak install flathub app.zen_browser.zen -y
 
 }
 
