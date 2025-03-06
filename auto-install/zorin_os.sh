@@ -261,6 +261,7 @@ testes_internet
 travas_apt
 apt_update
 travas_apt
+add_repositories
 just_apt_update
 install_debs
 install_flatpaks
