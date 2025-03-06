@@ -113,9 +113,9 @@ source $ZSH/oh-my-zsh.sh
 # alias ohmyzsh="mate ~/.oh-my-zsh"
 alias supa="supabase"
 alias py="python3"
-alias pjt="cd ./Projects"
 alias activate="source env/bin/activate"
 alias sail="./vendor/bin/sail"
+
 # android studio emulator config
 export ANDROID_HOME=${HOME}/Android/Sdk
 export PATH=${ANDROID_HOME}/tools:${PATH}
