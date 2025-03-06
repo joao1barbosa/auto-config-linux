@@ -162,13 +162,22 @@ install_nvm(){
 }
 
 ## Install Supabase ##
-#TODO: fix supabase install
 install_supabase(){
   echo -e "${BLUE}[INFO] - Instalando Supabase CLI${NON_COLOR}"
 
-  sudo curl -L -o /usr/local/bin/supabase https://github.com/supabase/cli/releases/latest/download/supabase-linux-amd64
+  cd "$DIRETORIO_DOWNLOADS"
+  
+  URL_SUPABASE=$(curl -s https://api.github.com/repos/supabase/cli/releases/latest | grep -oP 'https://[^"]+supabase_linux_amd64\.tar\.gz')
+  curl -L -o supabase.tar.gz "$URL_SUPABASE"
+  
+  tar -xzf supabase.tar.gz supabase
+  chmod +x supabase
 
-  sudo chmod +x /usr/local/bin/supabase
+  sudo mv supabase /usr/local/bin/supabase
+
+  rm supabase.tar.gz
+
+  cd "$HOME"
 }
 
 ## Configurar ZSH com extensões ##
