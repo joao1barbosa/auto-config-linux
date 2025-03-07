@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 #
 # Author:         Joao Pedro Barbosa
-# Based on:       https://raw.githubusercontent.com/Diolinux/pop-os-postinstall/refs/heads/main/pop-os-postinstall.sh
+# Based on:       https://github.com/Diolinux/pop-os-postinstall/tree/main
 #
 # ----------------------------- VARIÁVEIS ----------------------------- #
 set -e  
@@ -12,9 +12,10 @@ URL_VSCODE="https://code.visualstudio.com/sha/download?build=stable&os=linux-deb
 # Não encontrei um lick que baixa automaticamente a versão mais recente
 URL_WARP="https://releases.warp.dev/stable/v0.2025.02.26.08.02.stable_02/warp-terminal_0.2025.02.26.08.02.stable.02_amd64.deb"
 
+# Diretórios
 DIRETORIO_DOWNLOADS="$HOME/Downloads/programas"
+DIRETORIO_ROOT=$(pwd)
 FILE="/home/$USER/.config/gtk-3.0/bookmarks"
-
 
 #COLORS
 ORANGE='\e[1;93m'
@@ -31,16 +32,15 @@ apt_update(){
 
 # Internet conectando?
 testes_internet(){
-if ! ping -c 1 8.8.8.8 -q &> /dev/null; then
-  echo -e "${ORANGE}[ERROR] - Seu computador não tem conexão com a Internet. Verifique a rede.${NON_COLOR}"
-  exit 1
-else
-  echo -e "${BLUE}[INFO] - Conexão com a Internet funcionando normalmente.${NON_COLOR}"
-fi
+  if ! ping -c 1 8.8.8.8 -q &> /dev/null; then
+    echo -e "${ORANGE}[ERROR] - Seu computador não tem conexão com a Internet. Verifique a rede.${NON_COLOR}"
+    exit 1
+  else
+    echo -e "${BLUE}[INFO] - Conexão com a Internet funcionando normalmente.${NON_COLOR}"
+  fi
 }
 
 # ------------------------------------------------------------------------------ #
-
 
 ## Removendo travas eventuais do apt ##
 travas_apt(){
@@ -55,7 +55,7 @@ add_repositories(){
 
 ## Atualizando o repositório ##
 just_apt_update(){
-sudo apt update -y
+  sudo apt update -y
 }
 
 ##DEB SOFTWARES TO INSTALL
@@ -75,44 +75,45 @@ PROGRAMAS_PARA_INSTALAR=(
 ## Download e instalaçao de programas externos ##
 install_debs(){
 
-echo -e "${BLUE}[INFO] - Baixando pacotes .deb${NON_COLOR}"
-
-mkdir -p "$DIRETORIO_DOWNLOADS"
-cd "$DIRETORIO_DOWNLOADS"
-
-wget --content-disposition -c "$URL_DISCORD"
-wget --content-disposition -c "$URL_VSCODE"
-wget --content-disposition -c "$URL_WARP"
-
-cd "$HOME"
-
-## Instalando pacotes .deb baixados na sessão anterior ##
-echo -e "${BLUE}[INFO] - Instalando pacotes .deb baixados${NON_COLOR}"
-sudo dpkg -i $DIRETORIO_DOWNLOADS/*.deb
-
-# Instalar programas no apt
-echo -e "${BLUE}[INFO] - Instalando pacotes apt do repositório${NON_COLOR}"
-
-for nome_do_programa in ${PROGRAMAS_PARA_INSTALAR[@]}; do
-  if ! dpkg -l | grep -q $nome_do_programa; then # Só instala se já não estiver instalado
-    sudo apt install "$nome_do_programa" -y
-  else
-    echo "[INSTALADO] - $nome_do_programa"
-  fi
-done
+  echo -e "${BLUE}[INFO] - Baixando pacotes .deb${NON_COLOR}"
+  
+  mkdir -p "$DIRETORIO_DOWNLOADS"
+  cd "$DIRETORIO_DOWNLOADS"
+  
+  wget --content-disposition -c "$URL_DISCORD"
+  wget --content-disposition -c "$URL_VSCODE"
+  wget --content-disposition -c "$URL_WARP"
+  
+  cd "$HOME"
+  
+  ## Instalando pacotes .deb baixados na sessão anterior ##
+  echo -e "${BLUE}[INFO] - Instalando pacotes .deb baixados${NON_COLOR}"
+  sudo dpkg -i $DIRETORIO_DOWNLOADS/*.deb
+  
+  # Instalar programas no apt
+  echo -e "${BLUE}[INFO] - Instalando pacotes apt do repositório${NON_COLOR}"
+  
+  for nome_do_programa in ${PROGRAMAS_PARA_INSTALAR[@]}; do
+    if ! dpkg -l | grep -q $nome_do_programa; then # Só instala se já não estiver instalado
+      sudo apt install "$nome_do_programa" -y
+    else
+      echo "[INSTALADO] - $nome_do_programa"
+    fi
+  done
 
 }
+
 ## Instalando pacotes Flatpak ##
 install_flatpaks(){
 
   echo -e "${BLUE}[INFO] - Instalando pacotes flatpak${NON_COLOR}"
 
-flatpak install flathub com.obsproject.Studio -y
-flatpak install flathub org.gimp.GIMP -y
-flatpak install flathub com.spotify.Client -y
-flatpak install flathub org.telegram.desktop -y
-flatpak install flathub io.dbeaver.DBeaverCommunity -y
-flatpak install flathub app.zen_browser.zen -y
+  flatpak install flathub com.obsproject.Studio -y
+  flatpak install flathub org.gimp.GIMP -y
+  flatpak install flathub com.spotify.Client -y
+  flatpak install flathub org.telegram.desktop -y
+  flatpak install flathub io.dbeaver.DBeaverCommunity -y
+  flatpak install flathub app.zen_browser.zen -y
 
 }
 
@@ -121,27 +122,27 @@ install_docker(){
 
   echo -e "${BLUE}[INFO] - Instalando Docker ${NON_COLOR}"
 
-# Remove pacotes conflitantes
-for pkg in docker.io docker-doc docker-compose docker-compose-v2 podman-docker containerd runc; do sudo apt-get remove $pkg; done
-
-# Adicionar a chave GPG oficial do Docker:
-sudo apt-get update
-sudo apt-get install ca-certificates curl
-sudo install -m 0755 -d /etc/apt/keyrings
-sudo curl -fsSL https://download.docker.com/linux/ubuntu/gpg -o /etc/apt/keyrings/docker.asc
-sudo chmod a+r /etc/apt/keyrings/docker.asc
-
-# Adicionar o repositório as fontes Apt:
-echo \
-  "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/ubuntu \
-  $(. /etc/os-release && echo "${UBUNTU_CODENAME:-$VERSION_CODENAME}") stable" | \
-  sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
-sudo apt-get update
-
-# Instalando definitivamente docker e extensões
-sudo apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin -y
-
-sudo usermod -aG docker $USER
+  # Remove pacotes conflitantes
+  for pkg in docker.io docker-doc docker-compose docker-compose-v2 podman-docker containerd runc; do sudo apt-get remove $pkg; done
+  
+  # Adicionar a chave GPG oficial do Docker:
+  sudo apt-get update
+  sudo apt-get install ca-certificates curl
+  sudo install -m 0755 -d /etc/apt/keyrings
+  sudo curl -fsSL https://download.docker.com/linux/ubuntu/gpg -o /etc/apt/keyrings/docker.asc
+  sudo chmod a+r /etc/apt/keyrings/docker.asc
+  
+  # Adicionar o repositório as fontes Apt:
+  echo \
+    "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/ubuntu \
+    $(. /etc/os-release && echo "${UBUNTU_CODENAME:-$VERSION_CODENAME}") stable" | \
+    sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+  sudo apt-get update
+  
+  # Instalando definitivamente docker e extensões
+  sudo apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin -y
+  
+  sudo usermod -aG docker $USER
 
 }
 
@@ -180,6 +181,54 @@ install_supabase(){
   cd "$HOME"
 }
 
+#Cria pastas no nautilus
+extra_config(){
+
+  mkdir -p /home/$USER/Temp
+  mkdir -p /home/$USER/Projects
+  mkdir -p /home/$USER/Vídeos/'OBS Rec'
+  
+  #Adiciona atalhos ao Nautilus
+  if test -f "$FILE"; then
+      echo "$FILE já existe"
+  else
+      echo "$FILE não existe, criando..."
+      touch /home/$USER/.config/gkt-3.0/bookmarks
+  fi
+  
+  echo "file:///home/$USER/Temp Temp" >> $FILE
+  echo "file:///home/$USER/Projects Projects" >> $FILE
+}
+
+## Config git ##
+config_git(){
+  git config --global user.name joao1barbosa
+  git config --global user.email joao1.barbosa@outlook.com
+  git config --global core.editor code
+
+}
+
+## Configura fontes do sistema ##
+config_fonts(){
+  cd "$DIRETORIO_ROOT"
+
+  sudo cp -r ../_fonts/* /usr/share/fonts
+  fc-cache -f -v
+
+  cd "$HOME"
+
+}
+
+## Finalização, atualização e limpeza##
+system_clean(){
+
+  apt_update -y
+  flatpak update -y
+  sudo apt autoclean -y
+  sudo apt autoremove -y
+  nautilus -q
+}
+
 ## Configurar ZSH com extensões ##
 config_zsh(){
   echo -e "${BLUE}[INFO] - Configurando o ZSH${NON_COLOR}"
@@ -195,8 +244,12 @@ config_zsh(){
   git clone https://github.com/zsh-users/zsh-syntax-highlighting.git "$ZSH_CUSTOM/plugins/zsh-syntax-highlighting"
   git clone https://github.com/zsh-users/zsh-autosuggestions "$ZSH_CUSTOM/plugins/zsh-autosuggestions"
 
+  cd "$DIRETORIO_ROOT"
+
   cp -f ../_zsh-files/.zshrc "$HOME"
   cp -f ../_zsh-files/.p10k.zsh "$HOME"
+
+  cd "$HOME"
 
   # Define o Zsh como shell padrão
   if [ "$SHELL" != "$(which zsh)" ]; then
@@ -205,53 +258,6 @@ config_zsh(){
   else
     echo "Zsh já é o shell padrão."
   fi
-}
-
-
-## Finalização, atualização e limpeza##
-system_clean(){
-
-apt_update -y
-flatpak update -y
-sudo apt autoclean -y
-sudo apt autoremove -y
-nautilus -q
-}
-
-
-#Cria pastas no nautilus
-extra_config(){
-
-mkdir -p /home/$USER/Temp
-mkdir -p /home/$USER/Projects
-mkdir -p /home/$USER/Vídeos/'OBS Rec'
-
-#Adiciona atalhos ao Nautilus
-if test -f "$FILE"; then
-    echo "$FILE já existe"
-else
-    echo "$FILE não existe, criando..."
-    touch /home/$USER/.config/gkt-3.0/bookmarks
-fi
-
-echo "file:///home/$USER/Temp Temp" >> $FILE
-echo "file:///home/$USER/Projects Projects" >> $FILE
-}
-
-## Config git ##
-config_git(){
-git config --global user.name joao1barbosa
-git config --global user.email joao1.barbosa@outlook.com
-git config --global core.editor code
-
-}
-
-## Configura fontes do sistema ##
-config_fonts(){
-  sudo cp -r ../_fonts/* /usr/share/fonts
-
-  fc-cache -f -v
-
 }
 
 # -------------------------------EXECUÇÃO----------------------------------------- #
@@ -268,9 +274,9 @@ install_flatpaks
 install_docker
 install_nvm
 install_supabase
-extra_config
-apt_update
 config_git
 config_fonts
-system_clean
+extra_config
+apt_update
 config_zsh
+system_clean
