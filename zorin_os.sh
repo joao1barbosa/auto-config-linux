@@ -65,7 +65,9 @@ PROGRAMAS_PARA_INSTALAR=(
   php
   python3
   python3-pip
+  kitty
   zsh
+  unzip
 )
 
 # ---------------------------------------------------------------------- #
@@ -207,10 +209,51 @@ config_git(){
 
 ## Configura fontes do sistema ##
 config_fonts(){
-  cd "$DIRETORIO_ROOT"
+  cd "$DIRETORIO_DOWNLOADS"
 
-  sudo cp -r ../_fonts/* /usr/share/fonts
+  wget --content-disposition -c "$URL_JETBRAINSMONO"
+
+  unzip JetBrainsMono-2.304.zip -d JetBrainsMono 
+
+  sudo cp -r JetBrainsMono /usr/share/fonts
   fc-cache -f -v
+
+  cd "$HOME"
+
+}
+
+## Configurar Kitty e ZSH com extensões ##
+config_zsh(){
+  echo -e "${BLUE}[INFO] - Configurando o ZSH${NON_COLOR}"
+
+  mkdir -p ~/.config/kitty
+  mkdir -p ~/.zsh
+
+  cd "$DIRETORIO_DOWNLOADS"
+  wget https://github.com/joao1barbosa/auto-config-linux/raw/main/config_files.zip
+
+  unzip config_files.zip
+
+  cp -f config_files/.zshrc "$HOME"
+  cp -f config_files/kitty.conf ~/.config/kitty
+
+  # Instala o starship
+  sh -c "$(curl -fsSL https://starship.rs/install.sh)" -- --yes
+
+  # Baixa as extensões do ZSH
+  git clone https://github.com/zsh-users/zsh-autosuggestions ~/.zsh/zsh-autosuggestions
+  git clone https://github.com/zsh-users/zsh-syntax-highlighting.git ~/.zsh/zsh-syntax-highlighting
+
+  # Define Zsh como padrão
+  CURRENT_SHELL=$(basename "$SHELL")
+  ZSH_PATH=$(which zsh)
+
+  if [ "$CURRENT_SHELL" != "zsh" ] && [ -n "$ZSH_PATH" ]; then
+    echo "Definindo Zsh como shell padrão..."
+    chsh -s "$ZSH_PATH" || echo "Erro ao alterar o shell padrão"
+  else
+    echo "Zsh já é o shell padrão ou não está instalado."
+  fi
 
   cd "$HOME"
 
@@ -219,42 +262,12 @@ config_fonts(){
 ## Finalização, atualização e limpeza##
 system_clean(){
 
+  rm "$DIRETORIO_DOWNLOADS"
   apt_update -y
   flatpak update -y
   sudo apt autoclean -y
   sudo apt autoremove -y
   nautilus -q
-}
-
-## Configurar ZSH com extensões ##
-config_zsh(){
-  echo -e "${BLUE}[INFO] - Configurando o ZSH${NON_COLOR}"
-
-  sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --unattended
-
-  ZSH_CUSTOM="${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}"
-
-  # Clona repositório do tema powerlevel10k
-  git clone https://github.com/romkatv/powerlevel10k.git "$ZSH_CUSTOM/themes/powerlevel10k"
-
-  # Adiciona extensões ao ZSH
-  git clone https://github.com/zsh-users/zsh-syntax-highlighting.git "$ZSH_CUSTOM/plugins/zsh-syntax-highlighting"
-  git clone https://github.com/zsh-users/zsh-autosuggestions "$ZSH_CUSTOM/plugins/zsh-autosuggestions"
-
-  cd "$DIRETORIO_ROOT"
-
-  cp -f ../_zsh-files/.zshrc "$HOME"
-  cp -f ../_zsh-files/.p10k.zsh "$HOME"
-
-  cd "$HOME"
-
-  # Define o Zsh como shell padrão
-  if [ "$SHELL" != "$(which zsh)" ]; then
-    chsh -s "$(which zsh)"
-    echo "Zsh definido como shell padrão."
-  else
-    echo "Zsh já é o shell padrão."
-  fi
 }
 
 # -------------------------------EXECUÇÃO----------------------------------------- #
