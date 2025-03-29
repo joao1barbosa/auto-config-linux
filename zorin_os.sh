@@ -9,12 +9,10 @@ set -e
 ##URLS
 URL_DISCORD="https://discord.com/api/download?platform=linux&format=deb"
 URL_VSCODE="https://code.visualstudio.com/sha/download?build=stable&os=linux-deb-x64"
-# Não encontrei um lick que baixa automaticamente a versão mais recente
-URL_WARP="https://releases.warp.dev/stable/v0.2025.02.26.08.02.stable_02/warp-terminal_0.2025.02.26.08.02.stable.02_amd64.deb"
+URL_JETBRAINSMONO="https://download-cdn.jetbrains.com/fonts/JetBrainsMono-2.304.zip"
 
 # Diretórios
 DIRETORIO_DOWNLOADS="$HOME/Downloads/programas"
-DIRETORIO_ROOT=$(pwd)
 FILE="/home/$USER/.config/gtk-3.0/bookmarks"
 
 #COLORS
@@ -82,7 +80,6 @@ install_debs(){
   
   wget --content-disposition -c "$URL_DISCORD"
   wget --content-disposition -c "$URL_VSCODE"
-  wget --content-disposition -c "$URL_WARP"
   
   cd "$HOME"
   
