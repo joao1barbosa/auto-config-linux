@@ -262,7 +262,7 @@ config_zsh(){
 ## Finalização, atualização e limpeza##
 system_clean(){
 
-  rm "$DIRETORIO_DOWNLOADS"
+  rm -rf "$DIRETORIO_DOWNLOADS"
   apt_update -y
   flatpak update -y
   sudo apt autoclean -y
