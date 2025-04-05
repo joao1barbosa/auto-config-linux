@@ -16,7 +16,7 @@ jobs:
       - name: Compactar pasta em ZIP
         run: |
           cd config_files
-          zip -r ../nconfig_files.zip .
+          zip -r ../config_files.zip .
 
       - name: Upload do ZIP como artefato
         uses: actions/upload-artifact@v4
