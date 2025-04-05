@@ -65,7 +65,6 @@ PROGRAMAS_PARA_INSTALAR=(
   php
   python3
   python3-pip
-  kitty
   zsh
   unzip
 )
@@ -222,11 +221,10 @@ config_fonts(){
 
 }
 
-## Configurar Kitty e ZSH com extensões ##
+## Configurar ZSH com extensões ##
 config_zsh(){
   echo -e "${BLUE}[INFO] - Configurando o ZSH${NON_COLOR}"
 
-  mkdir -p ~/.config/kitty
   mkdir -p ~/.zsh
 
   cd "$DIRETORIO_DOWNLOADS"
@@ -235,16 +233,12 @@ config_zsh(){
   unzip config_files.zip
 
   cp -f config_files/.zshrc "$HOME"
-  cp -f config_files/kitty.conf ~/.config/kitty
 
-  # Instala o starship
   sh -c "$(curl -fsSL https://starship.rs/install.sh)" -- --yes
 
-  # Baixa as extensões do ZSH
   git clone https://github.com/zsh-users/zsh-autosuggestions ~/.zsh/zsh-autosuggestions
   git clone https://github.com/zsh-users/zsh-syntax-highlighting.git ~/.zsh/zsh-syntax-highlighting
 
-  # Define Zsh como padrão
   CURRENT_SHELL=$(basename "$SHELL")
   ZSH_PATH=$(which zsh)
 

@@ -1,8 +1,5 @@
-# ---------------------
 # Starship Prompt
 eval "$(starship init zsh)"
-# ---------------------
-
 
 # NVM
 export NVM_DIR="$HOME/.nvm"
@@ -13,11 +10,17 @@ export NVM_DIR="$HOME/.nvm"
 source ~/.zsh/zsh-autosuggestions/zsh-autosuggestions.zsh
 source ~/.zsh/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 
-# --- suas configs pessoais ---
+# Personal aliases
 alias supa="supabase"
 alias py="python3"
 alias activate="source env/bin/activate"
 alias sail="./vendor/bin/sail"
+
+# History config
+HISTFILE=~/.zsh_history
+HISTSIZE=100
+SAVEHIST=2000
+setopt INC_APPEND_HISTORY SHARE_HISTORY
 
 export ANDROID_HOME=${HOME}/Android/Sdk
 export PATH=${ANDROID_HOME}/tools:${PATH}
