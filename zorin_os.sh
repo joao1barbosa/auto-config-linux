@@ -66,6 +66,7 @@ travas_apt(){
 add_repositories(){
 
   sudo add-apt-repository ppa:ondrej/php -y
+  sudo add-apt-repository ppa:libreoffice/ppa -y
   sudo apt update -y
 
 }
@@ -117,7 +118,7 @@ install_docker(){
 
   echo -e "${BLUE}[INFO] - Instalando Docker ${NON_COLOR}"
 
-  for pkg in docker.io docker-doc docker-compose docker-compose-v2 podman-docker containerd runc; do sudo apt-get remove $pkg; done
+  for pkg in docker.io docker-doc docker-compose docker-compose-v2 podman-docker containerd runc; do sudo apt-get remove -y $pkg; done
   
   sudo apt-get update
   sudo apt-get install ca-certificates curl
@@ -273,9 +274,9 @@ system_clean(){
 
 testes_internet
 travas_apt
+add_repositories
 apt_update
 travas_apt
-add_repositories
 install_debs
 install_flatpaks
 install_docker
