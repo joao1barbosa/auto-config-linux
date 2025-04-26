@@ -6,57 +6,21 @@
 # ----------------------------- VARIÁVEIS ----------------------------- #
 set -e  
 
-##URLS
+# URLS
 URL_DISCORD="https://discord.com/api/download?platform=linux&format=deb"
 URL_VSCODE="https://code.visualstudio.com/sha/download?build=stable&os=linux-deb-x64"
-URL_JETBRAINSMONO="https://download-cdn.jetbrains.com/fonts/JetBrainsMono-2.304.zip"
+URL_CONFIGFILES="https://github.com/joao1barbosa/auto-config-linux/releases/download/latest/config_files.zip"
 
 # Diretórios
 DIRETORIO_DOWNLOADS="$HOME/Downloads/programas"
 FILE="/home/$USER/.config/gtk-3.0/bookmarks"
 
-#COLORS
+# Cores
 ORANGE='\e[1;93m'
 BLUE='\e[1;94m'
 NON_COLOR='\e[0m'
 
-
-#FUNCTIONS
-
-# Atualizando repositório e fazendo atualização do sistema
-apt_update(){
-  sudo apt update && sudo apt dist-upgrade -y
-}
-
-# Internet conectando?
-testes_internet(){
-  if ! ping -c 1 8.8.8.8 -q &> /dev/null; then
-    echo -e "${ORANGE}[ERROR] - Seu computador não tem conexão com a Internet. Verifique a rede.${NON_COLOR}"
-    exit 1
-  else
-    echo -e "${BLUE}[INFO] - Conexão com a Internet funcionando normalmente.${NON_COLOR}"
-  fi
-}
-
-# ------------------------------------------------------------------------------ #
-
-## Removendo travas eventuais do apt ##
-travas_apt(){
-  sudo rm -f /var/lib/dpkg/lock-frontend
-  sudo rm -f /var/cache/apt/archives/lock
-}
-
-## Adiciona repositórios necessários ##
-add_repositories(){
-  sudo add-apt-repository ppa:ondrej/php -y
-}
-
-## Atualizando o repositório ##
-just_apt_update(){
-  sudo apt update -y
-}
-
-##DEB SOFTWARES TO INSTALL
+# Softwares DEB para instalar
 PROGRAMAS_PARA_INSTALAR=(
   vlc
   folder-color
@@ -69,9 +33,44 @@ PROGRAMAS_PARA_INSTALAR=(
   unzip
 )
 
-# ---------------------------------------------------------------------- #
+# Funções
 
-## Download e instalaçao de programas externos ##
+## Atualiza repositório e faz atualização do sistema ##
+apt_update(){
+
+  sudo apt update && sudo apt dist-upgrade -y
+
+}
+
+## Testa internet ##
+testes_internet(){
+
+  if ! ping -c 1 8.8.8.8 -q &> /dev/null; then
+    echo -e "${ORANGE}[ERROR] - Seu computador não tem conexão com a Internet. Verifique a rede.${NON_COLOR}"
+    exit 1
+  else
+    echo -e "${BLUE}[INFO] - Conexão com a Internet funcionando normalmente.${NON_COLOR}"
+  fi
+
+}
+
+## Remove travas eventuais do apt ##
+travas_apt(){
+
+  sudo rm -f /var/lib/dpkg/lock-frontend
+  sudo rm -f /var/cache/apt/archives/lock
+
+}
+
+## Adiciona repositórios necessários ##
+add_repositories(){
+
+  sudo add-apt-repository ppa:ondrej/php -y
+  sudo apt update -y
+
+}
+
+## Baixa e instala programas externos ##
 install_debs(){
 
   echo -e "${BLUE}[INFO] - Baixando pacotes .deb${NON_COLOR}"
@@ -84,15 +83,13 @@ install_debs(){
   
   cd "$HOME"
   
-  ## Instalando pacotes .deb baixados na sessão anterior ##
   echo -e "${BLUE}[INFO] - Instalando pacotes .deb baixados${NON_COLOR}"
   sudo dpkg -i $DIRETORIO_DOWNLOADS/*.deb
   
-  # Instalar programas no apt
   echo -e "${BLUE}[INFO] - Instalando pacotes apt do repositório${NON_COLOR}"
   
   for nome_do_programa in ${PROGRAMAS_PARA_INSTALAR[@]}; do
-    if ! dpkg -l | grep -q $nome_do_programa; then # Só instala se já não estiver instalado
+    if ! dpkg -l | grep -q $nome_do_programa; then 
       sudo apt install "$nome_do_programa" -y
     else
       echo "[INSTALADO] - $nome_do_programa"
@@ -101,7 +98,7 @@ install_debs(){
 
 }
 
-## Instalando pacotes Flatpak ##
+## Instala pacotes Flatpak ##
 install_flatpaks(){
 
   echo -e "${BLUE}[INFO] - Instalando pacotes flatpak${NON_COLOR}"
@@ -115,36 +112,32 @@ install_flatpaks(){
 
 }
 
-##Instalando Docker ##
+## Instala Docker ##
 install_docker(){
 
   echo -e "${BLUE}[INFO] - Instalando Docker ${NON_COLOR}"
 
-  # Remove pacotes conflitantes
   for pkg in docker.io docker-doc docker-compose docker-compose-v2 podman-docker containerd runc; do sudo apt-get remove $pkg; done
   
-  # Adicionar a chave GPG oficial do Docker:
   sudo apt-get update
   sudo apt-get install ca-certificates curl
   sudo install -m 0755 -d /etc/apt/keyrings
   sudo curl -fsSL https://download.docker.com/linux/ubuntu/gpg -o /etc/apt/keyrings/docker.asc
   sudo chmod a+r /etc/apt/keyrings/docker.asc
   
-  # Adicionar o repositório as fontes Apt:
   echo \
     "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/ubuntu \
     $(. /etc/os-release && echo "${UBUNTU_CODENAME:-$VERSION_CODENAME}") stable" | \
     sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
   sudo apt-get update
   
-  # Instalando definitivamente docker e extensões
   sudo apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin -y
   
   sudo usermod -aG docker $USER
 
 }
 
-## Instalar NVM e configurar o Node.js ##
+## Instala NVM e configura o Node.js ##
 install_nvm(){
 
   echo -e "${BLUE}[INFO] - Instalando NVM e Node.js (lts)${NON_COLOR}"
@@ -160,8 +153,9 @@ install_nvm(){
 
 }
 
-## Install Supabase ##
+## Instala Supabase ##
 install_supabase(){
+
   echo -e "${BLUE}[INFO] - Instalando Supabase CLI${NON_COLOR}"
 
   cd "$DIRETORIO_DOWNLOADS"
@@ -177,16 +171,15 @@ install_supabase(){
   rm supabase.tar.gz
 
   cd "$HOME"
+
 }
 
-#Cria pastas no nautilus
+## Cria pastas no nautilus ##
 extra_config(){
 
   mkdir -p /home/$USER/Temp
   mkdir -p /home/$USER/Projects
-  mkdir -p /home/$USER/Vídeos/'OBS Rec'
   
-  #Adiciona atalhos ao Nautilus
   if test -f "$FILE"; then
       echo "$FILE já existe"
   else
@@ -196,43 +189,49 @@ extra_config(){
   
   echo "file:///home/$USER/Temp Temp" >> $FILE
   echo "file:///home/$USER/Projects Projects" >> $FILE
+
 }
 
-## Config git ##
+## Configura o Git ##
 config_git(){
+
   git config --global user.name joao1barbosa
   git config --global user.email joao1.barbosa@outlook.com
   git config --global core.editor code
 
 }
 
-## Configura fontes do sistema ##
-config_fonts(){
+## Baixa arquivos para configuração ##
+download_config_files(){
+
+  echo -e "${BLUE}[INFO] - Baixando arquivos de Configuração${NON_COLOR}"
+
   cd "$DIRETORIO_DOWNLOADS"
 
-  wget --content-disposition -c "$URL_JETBRAINSMONO"
-
-  unzip JetBrainsMono-2.304.zip -d JetBrainsMono 
-
-  sudo cp -r JetBrainsMono /usr/share/fonts
-  fc-cache -f -v
+  wget --content-disposition -c "$URL_CONFIGFILES"
+  unzip config_files.zip
 
   cd "$HOME"
 
 }
 
-## Configurar ZSH com extensões ##
+## Configura fontes ##
+config_fonts(){
+
+  echo -e "${BLUE}[INFO] - Configurando Fontes${NON_COLOR}"
+
+  sudo cp -r $DIRETORIO_DOWNLOADS/config_files/Fonts/* /usr/share/fonts
+  fc-cache -f -v
+
+}
+
+## Configura ZSH e extensões ##
 config_zsh(){
   echo -e "${BLUE}[INFO] - Configurando o ZSH${NON_COLOR}"
 
   mkdir -p ~/.zsh
 
-  cd "$DIRETORIO_DOWNLOADS"
-  wget https://github.com/joao1barbosa/auto-config-linux/raw/main/config_files.zip
-
-  unzip config_files.zip
-
-  cp -f config_files/.zshrc "$HOME"
+  cp -f $DIRETORIO_DOWNLOADS/config_files/.zshrc "$HOME"
 
   sh -c "$(curl -fsSL https://starship.rs/install.sh)" -- --yes
 
@@ -250,10 +249,16 @@ config_zsh(){
   fi
 
   cd "$HOME"
+}
+
+## Aplica personalizações ao Gnome Terminal ##
+config_terminal(){
+
+  dconf load /org/gnome/terminal/ < $DIRETORIO_DOWNLOADS/config_files/gnome-terminal.conf
 
 }
 
-## Finalização, atualização e limpeza##
+## Finaliza, atualiza e limpa ##
 system_clean(){
 
   rm -rf "$DIRETORIO_DOWNLOADS"
@@ -266,21 +271,21 @@ system_clean(){
 
 # -------------------------------EXECUÇÃO----------------------------------------- #
 
-travas_apt
 testes_internet
 travas_apt
 apt_update
 travas_apt
 add_repositories
-just_apt_update
 install_debs
 install_flatpaks
 install_docker
 install_nvm
 install_supabase
 config_git
+download_config_files
 config_fonts
 extra_config
 apt_update
 config_zsh
+config_terminal
 system_clean
