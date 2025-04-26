@@ -1,4 +1,4 @@
-name: Compactar Pasta em ZIP
+name: Gerar e Publicar ZIP como Release
 
 on:
   push:
@@ -6,20 +6,24 @@ on:
       - main
 
 jobs:
-  zip-folder:
+  build-and-release:
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout do código
         uses: actions/checkout@v4
 
-      - name: Compactar pasta em ZIP
+      - name: Criar o ZIP da pasta `config`
         run: |
-          cd config_files
-          zip -r ../config_files.zip .
+          zip -r config_files.zip config_files/
 
-      - name: Upload do ZIP como artefato
-        uses: actions/upload-artifact@v4
+      - name: Publicar release "latest" com o .zip
+        uses: softprops/action-gh-release@v2
         with:
-          name: config_files
-          path: config_files.zip
+          tag_name: latest
+          name: Última versão automática
+          files: config_files.zip
+          draft: false
+          prerelease: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
