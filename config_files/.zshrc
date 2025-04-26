@@ -13,7 +13,6 @@ source ~/.zsh/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 # Personal aliases
 alias supa="supabase"
 alias py="python3"
-alias activate="source env/bin/activate"
 alias sail="./vendor/bin/sail"
 
 # History config

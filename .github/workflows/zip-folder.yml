@@ -21,7 +21,7 @@ jobs:
         uses: softprops/action-gh-release@v2
         with:
           tag_name: latest
-          name: Última versão automática
+          name: Files
           files: config_files.zip
           draft: false
           prerelease: false
