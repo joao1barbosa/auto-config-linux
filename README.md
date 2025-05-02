@@ -1,13 +1,22 @@
 # auto-config-linux
 
-Script de post install de sistemas Linux
+Post-installation script for Linux systems.
 
-## Como usar
+## How to Use
 
-Execute o comando no terminal, de acordo com a distribuição linux está usando:
+Run the following command in your terminal, according to the Linux distribution you are using:
 
 ### Zorin OS
 
-```shell
-bash -c "$(curl -fsSL https://raw.githubusercontent.com/joao1barbosa/auto-config-linux/refs/heads/main/zorin_os.sh)"
+```bash
+bash -c "$(curl -fsSL https://raw.githubusercontent.com/joao1barbosa/auto-config-linux/main/zorin_os.sh)"
 ```
+
+## To do
+
+- [x] Install applications  
+- [x] Install & configure CLIs  
+- [x] Install fonts  
+- [x] Configure Zsh & extensions  
+- [x] Personalize GNOME Terminal  
+- [ ] Add personalization to GNOME
