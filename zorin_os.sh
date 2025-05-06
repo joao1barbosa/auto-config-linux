@@ -7,8 +7,6 @@
 set -e  
 
 # URLS
-URL_DISCORD="https://discord.com/api/download?platform=linux&format=deb"
-URL_VSCODE="https://code.visualstudio.com/sha/download?build=stable&os=linux-deb-x64"
 URL_CONFIGFILES="https://github.com/joao1barbosa/auto-config-linux/releases/download/latest/config_files.zip"
 
 # Diretórios
@@ -31,6 +29,8 @@ PROGRAMAS_PARA_INSTALAR=(
   python3-pip
   zsh
   unzip
+  code
+  discord
 )
 
 # Funções
@@ -73,19 +73,6 @@ add_repositories(){
 
 ## Baixa e instala programas externos ##
 install_debs(){
-
-  echo -e "${BLUE}[INFO] - Baixando pacotes .deb${NON_COLOR}"
-  
-  mkdir -p "$DIRETORIO_DOWNLOADS"
-  cd "$DIRETORIO_DOWNLOADS"
-  
-  wget --content-disposition -c "$URL_DISCORD"
-  wget --content-disposition -c "$URL_VSCODE"
-  
-  cd "$HOME"
-  
-  echo -e "${BLUE}[INFO] - Instalando pacotes .deb baixados${NON_COLOR}"
-  sudo dpkg -i $DIRETORIO_DOWNLOADS/*.deb
   
   echo -e "${BLUE}[INFO] - Instalando pacotes apt do repositório${NON_COLOR}"
   
@@ -158,6 +145,8 @@ install_nvm(){
 install_supabase(){
 
   echo -e "${BLUE}[INFO] - Instalando Supabase CLI${NON_COLOR}"
+
+  mkdir -p "$DIRETORIO_DOWNLOADS"
 
   cd "$DIRETORIO_DOWNLOADS"
   
